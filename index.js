@@ -13,15 +13,33 @@ const d = 0; // distance (km)
 const fuel = 5000; // remaining fuel (kg)
 const fbr = 0.5; // fuel burn rate (kg/s)
 
-
-const d2 = d + (vel*time) //calcultes new distance
-const rf = fbr*time //calculates remaining fuel
-const vel2 = calcNewVel(acc, vel, time) //calculates new velocity based on acceleration
-
-// Pick up an error with how the function below is called and make it robust to such errors
-calcNewVel = (vel, acc, time) => { 
-  return vel + (acc*time)
+/* testing for errors within the parameters  */
+if(vel<0|| acc<0 || time<0 || d<0|| fuel<0 || fbr<0){
+  throw new Error("The PARAMETERS cannot have negative values!!!!!")
 }
+
+/* fix the time unit conversion */
+const d2 = d + (vel*time/3600) //calcultes new distance /* converted seconds to hours for km/h calculation */
+
+const rf = fuel- (fbr*time) //calculates remaining fuel
+
+/* throwing an error if the remainging fuel is negative */
+
+if(rf <0){
+  throw new Error("Insufficient fuel")
+}
+
+
+
+// Pick up an error with how the function below is called and make it robust to such errors  /* function was called incorrectly applied const */
+const calcNewVel = (vel, acc, time) => { 
+  /* velocity conversion into km/h */
+  return vel + (acc*time * 3600/1000) /* m/s converted to km/h */
+}
+
+
+
+const vel2 = calcNewVel(vel, acc, time) //calculates new velocity based on acceleration /* had to correct order of calcNewVel parameters  */
 
 console.log(`Corrected New Velocity: ${vel2} km/h`);
 console.log(`Corrected New Distance: ${d2} km`);
